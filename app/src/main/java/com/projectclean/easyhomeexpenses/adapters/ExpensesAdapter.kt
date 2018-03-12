@@ -1,11 +1,13 @@
 package com.projectclean.easyhomeexpenses.adapters
 
+import android.databinding.DataBindingUtil
 import android.support.v7.widget.RecyclerView
-import android.view.View
+import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
+import com.android.databinding.library.baseAdapters.BR
 import com.projectclean.easyhomeexpenses.R
 import com.projectclean.easyhomeexpenses.databinding.ExpenseViewBinding
-import com.projectclean.easyhomeexpenses.extensions.inflate
 import com.projectclean.easyhomeexpenses.models.Expense
 
 
@@ -13,20 +15,26 @@ import com.projectclean.easyhomeexpenses.models.Expense
  * Created by Carlos Albaladejo Pérez on 24/02/2018.
  */
 
-class ExpensesAdapter(var items : List<Expense>, var listener : (Expense) -> Unit) : RecyclerView.Adapter<ExpensesAdapter.ViewHolder>()
+class ExpensesAdapter(var items : List<Expense>, var listener : (Expense) -> Unit) : RecyclerView.Adapter<ExpensesAdapter.ExpenseViewHolder>()
 {
-    class ViewHolder(var expenseView: View) : RecyclerView.ViewHolder(expenseView)
+    class ExpenseViewHolder(var binding: ExpenseViewBinding) : RecyclerView.ViewHolder(binding.root)
     {
-        fun bind(expense: Expense, listener:(Expense) -> Unit)
+        fun bind(expense: Expense)
         {
-            var binding = ExpenseViewBinding()
-            binding.expense = expense
+            binding.setVariable(BR.expense, expense)
+            binding.executePendingBindings()
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(parent.inflate(R.layout.expense_view))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) : ExpenseViewHolder
+    {
+        val layoutInflater = LayoutInflater.from(parent.context)
+        val binding : ExpenseViewBinding = DataBindingUtil.inflate(layoutInflater, R.layout.expense_view, parent, false)
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(items[position], listener)
+        return ExpenseViewHolder(binding)
+    }
+
+    override fun onBindViewHolder(holder: ExpenseViewHolder, position: Int) = holder.bind(items[position])
 
     override fun getItemCount() = items.size
 

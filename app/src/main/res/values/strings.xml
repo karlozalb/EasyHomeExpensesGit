@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">Easy Home Expenses!</string>
     <string name="action_settings">Settings</string>
+    <string name="expense_name">Name</string>
+    <string name="expense_money">Money</string>
+    <string name="expense_date">Date</string>
+    <string name="save">Save</string>
+    <string name="expense_owner">Pagador</string>
+    <string name="cancel">Cancel</string>
 </resources>
