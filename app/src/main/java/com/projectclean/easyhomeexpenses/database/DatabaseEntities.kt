@@ -2,7 +2,7 @@ package com.projectclean.easyhomeexpenses.database
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
-import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * Created by Carlos Albaladejo Pérez on 12/03/2018.
@@ -17,8 +17,8 @@ class ExpenseEntity
 
     var name: String = ""
     var ownerName: String = ""
-    var date: SimpleDateFormat = SimpleDateFormat()
-    var money: Float = 0f
+    var date: Date = Date()
+    var money: String = "0.0"
 
 
 }

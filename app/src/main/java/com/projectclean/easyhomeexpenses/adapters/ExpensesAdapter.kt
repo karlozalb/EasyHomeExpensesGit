@@ -15,8 +15,10 @@ import com.projectclean.easyhomeexpenses.models.Expense
  * Created by Carlos Albaladejo Pérez on 24/02/2018.
  */
 
-class ExpensesAdapter(var items : List<Expense>, var listener : (Expense) -> Unit) : RecyclerView.Adapter<ExpensesAdapter.ExpenseViewHolder>()
+class ExpensesAdapter() : RecyclerView.Adapter<ExpensesAdapter.ExpenseViewHolder>()
 {
+    private var items : List<Expense> = listOf()
+
     class ExpenseViewHolder(var binding: ExpenseViewBinding) : RecyclerView.ViewHolder(binding.root)
     {
         fun bind(expense: Expense)
@@ -37,5 +39,10 @@ class ExpensesAdapter(var items : List<Expense>, var listener : (Expense) -> Uni
     override fun onBindViewHolder(holder: ExpenseViewHolder, position: Int) = holder.bind(items[position])
 
     override fun getItemCount() = items.size
+
+    fun setElements(items : List<Expense>){
+        this.items = items
+        notifyDataSetChanged()
+    }
 
 }

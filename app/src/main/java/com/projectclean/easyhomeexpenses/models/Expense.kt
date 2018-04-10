@@ -2,9 +2,8 @@ package com.projectclean.easyhomeexpenses.models
 
 import android.databinding.BaseObservable
 import android.databinding.Bindable
-import android.databinding.BindingAdapter
-import android.widget.TextView
 import com.projectclean.easyhomeexpenses.BR
+import com.projectclean.easyhomeexpenses.database.ExpenseEntity
 import java.util.*
 
 /**
@@ -13,6 +12,9 @@ import java.util.*
 
 data class Expense(var pname: String, var pdate: Date, var pmoney: Float, var pownername: String) : BaseObservable()
 {
+
+    constructor(expense: ExpenseEntity) : this(expense.name,expense.date,expense.money.toFloat(),expense.ownerName)
+
     var name : String = pname
     @Bindable
     get() = field

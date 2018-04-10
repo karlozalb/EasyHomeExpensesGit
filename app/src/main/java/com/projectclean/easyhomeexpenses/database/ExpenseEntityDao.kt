@@ -10,18 +10,18 @@ import android.arch.persistence.room.OnConflictStrategy.REPLACE
 @Dao
 interface ExpenseEntityDao {
 
-    @Query("select * from task")
+    @Query("select * from expenses")
     fun getAllExpenses(): List<ExpenseEntity>
 
-    @Query("select * from task where id = :id")
+    @Query("select * from expenses where id = :id")
     fun findExpenseById(id: Long): ExpenseEntity
 
     @Insert(onConflict = REPLACE)
-    fun insertExpense(task: ExpenseEntity)
+    fun insertExpense(expense: ExpenseEntity)
 
     @Update(onConflict = REPLACE)
-    fun updateExpense(task: ExpenseEntity)
+    fun updateExpense(expense: ExpenseEntity)
 
     @Delete
-    fun deleteExpense(task: ExpenseEntity)
+    fun deleteExpense(expense: ExpenseEntity)
 }
