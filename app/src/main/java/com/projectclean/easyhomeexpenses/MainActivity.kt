@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import com.google.firebase.auth.FirebaseAuth
@@ -16,9 +17,18 @@ import com.projectclean.easyhomeexpenses.models.Expense
 
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
+import com.projectclean.easyhomeexpenses.activities.SignInActivity
+import com.google.android.gms.auth.api.Auth
+import com.google.android.gms.common.api.GoogleApiClient
+import com.google.android.gms.common.ConnectionResult
+import com.google.firebase.firestore.FirebaseFirestore
+import com.projectclean.easyhomeexpenses.database.FirebaseController
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(),GoogleApiClient.OnConnectionFailedListener {
+
+    val TAG : String = "MainActivity"
+    val ANONYMOUS : String = "Anonymous"
 
     private var mainAdapter : ExpensesAdapter? = null
     private var databaseRequester : ExpenseDatabaseRequester? = null
@@ -26,6 +36,8 @@ class MainActivity : AppCompatActivity() {
     //Firebase
     private var fireBaseAuth : FirebaseAuth? = null
     private var fireBaseUser : FirebaseUser? = null
+    private var mGoogleApiClient : GoogleApiClient? = null
+    private var firebaseFirestore : FirebaseFirestore? = null
 
     private var userName : String? = ""
     private var photoUrl : String? = ""
@@ -64,7 +76,23 @@ class MainActivity : AppCompatActivity() {
             if (fireBaseUser!!.photoUrl != null) {
                 photoUrl = fireBaseUser!!.photoUrl.toString()
             }
+
+            firebaseFirestore = FirebaseFirestore.getInstance()
+
+            testCreateList()
         }
+
+        mGoogleApiClient = GoogleApiClient.Builder(this)
+                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                .addApi(Auth.GOOGLE_SIGN_IN_API)
+                .build()
+    }
+
+    fun testCreateList()
+    {
+        var fbController = FirebaseController(firebaseFirestore!!, fireBaseUser!!)
+
+        fbController.createNewList({ listId -> Log.i(TAG, listId) } ,{ Log.i(TAG, "Ooops! There was an error!") })
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -79,6 +107,14 @@ class MainActivity : AppCompatActivity() {
         // as you specify a parent activity in AndroidManifest.xml.
         return when (item.itemId) {
             R.id.action_settings -> true
+            R.id.action_sign_out -> run {
+                fireBaseAuth!!.signOut()
+                Auth.GoogleSignInApi.signOut(mGoogleApiClient)
+                userName = ANONYMOUS
+                startActivity(Intent(this, SignInActivity::class.java))
+                finish()
+                return true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -105,5 +141,9 @@ class MainActivity : AppCompatActivity() {
                 mainAdapter!!.setElements(list)
             }
         })
+    }
+
+    override fun onConnectionFailed(connectionResult: ConnectionResult) {
+        Log.d(TAG, "onConnectionFailed:$connectionResult")
     }
 }

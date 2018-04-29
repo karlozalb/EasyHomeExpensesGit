@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "311092073195",
+    "firebase_url": "https://easyhomeexpenses.firebaseio.com",
+    "project_id": "easyhomeexpenses",
+    "storage_bucket": "easyhomeexpenses.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:311092073195:android:fd20f4f21fe92193",
+        "android_client_info": {
+          "package_name": "com.projectclean.easyhomeexpenses"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "311092073195-oo91ar4e09om57jjq7t602774i8ud5fp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.projectclean.easyhomeexpenses",
+            "certificate_hash": "d0f643c394cdbd11d5e70ef9cd4b0578f9657157"
+          }
+        },
+        {
+          "client_id": "311092073195-ch55ei841fpbt9t2ge3te6m18b1bm1ao.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDpscsf2E9Er2buqV7S2a3Qf4yzpbz9Ksc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "311092073195-ch55ei841fpbt9t2ge3te6m18b1bm1ao.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
