@@ -1,9 +1,12 @@
 package com.projectclean.easyhomeexpenses
 
 import android.content.Intent
+import android.content.res.Resources
 import android.os.Bundle
+import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
+import android.support.v4.app.FragmentPagerAdapter
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -16,13 +19,14 @@ import com.projectclean.easyhomeexpenses.database.ExpensesDataBase
 import com.projectclean.easyhomeexpenses.models.Expense
 
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.content_main.*
 import com.projectclean.easyhomeexpenses.activities.SignInActivity
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.common.ConnectionResult
 import com.google.firebase.firestore.FirebaseFirestore
 import com.projectclean.easyhomeexpenses.database.FirebaseController
+import com.projectclean.easyhomeexpenses.fragments.OfflineExpensesFragment
+import com.projectclean.easyhomeexpenses.fragments.OnlineExpensesFragment
 
 
 class MainActivity : AppCompatActivity(),GoogleApiClient.OnConnectionFailedListener {
@@ -32,6 +36,8 @@ class MainActivity : AppCompatActivity(),GoogleApiClient.OnConnectionFailedListe
 
     private var mainAdapter : ExpensesAdapter? = null
     private var databaseRequester : ExpenseDatabaseRequester? = null
+
+    private var mViewPagerAdapter : FragmentPagerAdapter? = null
 
     //Firebase
     private var fireBaseAuth : FirebaseAuth? = null
@@ -47,21 +53,26 @@ class MainActivity : AppCompatActivity(),GoogleApiClient.OnConnectionFailedListe
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        fab.setOnClickListener { view ->
+        /*fab.setOnClickListener { view ->
             var intent = Intent(this, NewExpenseActivity::class.java)
             startActivity(intent)
-        }
+        }*/
 
         ExpensesDataBase.InitDatabase(this)
 
-        mainAdapter = ExpensesAdapter()
+        mViewPagerAdapter = ViewPagerAdapter(supportFragmentManager, this)
+        view_pager.adapter = mViewPagerAdapter
+
+        tab_layout.setupWithViewPager(view_pager)
+
+        /*mainAdapter = ExpensesAdapter()
 
         expenses_recycler_view.layoutManager = LinearLayoutManager(this)
         expenses_recycler_view.adapter = mainAdapter
 
         databaseRequester = ExpenseDatabaseRequester(ExpensesDataBase.instance!!.expenseDao())
 
-        updateAdapter()
+        updateAdapter()*/
 
         fireBaseAuth = FirebaseAuth.getInstance()
         fireBaseUser = fireBaseAuth!!.currentUser
@@ -122,7 +133,7 @@ class MainActivity : AppCompatActivity(),GoogleApiClient.OnConnectionFailedListe
     override fun onResume() {
         super.onResume()
 
-        updateAdapter()
+        //updateAdapter()
     }
 
     private fun updateAdapter()
@@ -147,3 +158,40 @@ class MainActivity : AppCompatActivity(),GoogleApiClient.OnConnectionFailedListe
         Log.d(TAG, "onConnectionFailed:$connectionResult")
     }
 }
+
+class ViewPagerAdapter(fm : FragmentManager, private var activity: AppCompatActivity) : FragmentPagerAdapter(fm) {
+
+    override fun getItem(position: Int): Fragment {
+        when (position) {
+            0 -> {
+                Log.i("TEST", "getItem = 0")
+                return OfflineExpensesFragment()
+            }
+            else -> {
+                Log.i("TEST", "getItem = 1")
+                return OnlineExpensesFragment()
+            }
+        }
+    }
+
+    override fun getCount(): Int {
+        return 2
+    }
+
+    override fun getPageTitle(position: Int): CharSequence {
+        when (position) {
+            0 -> {
+                Log.i("TEST", "getPageTitle = " + activity.getString(R.string.offline_list))
+                return activity.getString(R.string.offline_list)
+            }
+            1 -> {
+                Log.i("TEST", "getPageTitle = " + activity.getString(R.string.online_list))
+                return activity.getString(R.string.online_list)
+            }
+        }
+
+        return ""
+    }
+}
+
+

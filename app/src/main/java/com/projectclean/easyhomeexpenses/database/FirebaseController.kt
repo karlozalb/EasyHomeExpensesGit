@@ -13,6 +13,15 @@ import kotlin.reflect.KProperty
 class FirebaseController(var db : FirebaseFirestore, var user : FirebaseUser)
 {
 
+    companion object {
+        var instance : FirebaseController? =  null
+
+        fun init(db : FirebaseFirestore, user : FirebaseUser)
+        {
+            instance = FirebaseController(db,user)
+        }
+    }
+
     val EXPENSES_COLLECTION : String = "ExpensesCollection"
     val LISTS_COLLECTION : String = "ListsCollection"
 
