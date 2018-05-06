@@ -8,7 +8,7 @@ import android.view.ViewGroup
 
 import com.projectclean.easyhomeexpenses.R
 
-class OnlineExpensesFragment : Fragment() {
+class OnlineExpensesFragmentNotSigned : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -17,6 +17,6 @@ class OnlineExpensesFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
-        return inflater!!.inflate(R.layout.offline_list_fragment, container, false)
+        return inflater!!.inflate(R.layout.online_list_fragment_notsigned, container, false)
     }
 }

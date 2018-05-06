@@ -26,16 +26,13 @@ import com.google.android.gms.common.ConnectionResult
 import com.google.firebase.firestore.FirebaseFirestore
 import com.projectclean.easyhomeexpenses.database.FirebaseController
 import com.projectclean.easyhomeexpenses.fragments.OfflineExpensesFragment
-import com.projectclean.easyhomeexpenses.fragments.OnlineExpensesFragment
+import com.projectclean.easyhomeexpenses.fragments.OnlineExpensesFragmentNotSigned
 
 
 class MainActivity : AppCompatActivity(),GoogleApiClient.OnConnectionFailedListener {
 
     val TAG : String = "MainActivity"
     val ANONYMOUS : String = "Anonymous"
-
-    private var mainAdapter : ExpensesAdapter? = null
-    private var databaseRequester : ExpenseDatabaseRequester? = null
 
     private var mViewPagerAdapter : FragmentPagerAdapter? = null
 
@@ -77,7 +74,7 @@ class MainActivity : AppCompatActivity(),GoogleApiClient.OnConnectionFailedListe
         fireBaseAuth = FirebaseAuth.getInstance()
         fireBaseUser = fireBaseAuth!!.currentUser
 
-        if (fireBaseUser == null) {
+        /*if (fireBaseUser == null) {
             // Not signed in, launch the Sign In activity
             startActivity(Intent(this, SignInActivity::class.java))
             finish()
@@ -90,8 +87,8 @@ class MainActivity : AppCompatActivity(),GoogleApiClient.OnConnectionFailedListe
 
             firebaseFirestore = FirebaseFirestore.getInstance()
 
-            testCreateList()
-        }
+            //testCreateList()
+        }*/
 
         mGoogleApiClient = GoogleApiClient.Builder(this)
                 .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
@@ -130,30 +127,6 @@ class MainActivity : AppCompatActivity(),GoogleApiClient.OnConnectionFailedListe
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-
-        //updateAdapter()
-    }
-
-    private fun updateAdapter()
-    {
-        databaseRequester!!.GetAllExpenses(
-        {
-            elements ->
-            run{
-                var list = mutableListOf<Expense>()
-                val iterator = elements.iterator()
-
-                iterator.forEach{
-                    list.add(Expense(it))
-                }
-
-                mainAdapter!!.setElements(list)
-            }
-        })
-    }
-
     override fun onConnectionFailed(connectionResult: ConnectionResult) {
         Log.d(TAG, "onConnectionFailed:$connectionResult")
     }
@@ -169,7 +142,7 @@ class ViewPagerAdapter(fm : FragmentManager, private var activity: AppCompatActi
             }
             else -> {
                 Log.i("TEST", "getItem = 1")
-                return OnlineExpensesFragment()
+                return OnlineExpensesFragmentNotSigned()
             }
         }
     }
