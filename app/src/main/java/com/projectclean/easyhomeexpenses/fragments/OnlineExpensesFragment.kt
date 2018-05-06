@@ -15,10 +15,13 @@ import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.firestore.FirebaseFirestore
 
 import com.projectclean.easyhomeexpenses.R
 import kotlinx.android.synthetic.main.activity_sign_in.*
+import kotlinx.android.synthetic.main.online_list_fragment.*
 
 class OnlineExpensesFragment : Fragment(), GoogleApiClient.OnConnectionFailedListener {
 
@@ -33,6 +36,11 @@ class OnlineExpensesFragment : Fragment(), GoogleApiClient.OnConnectionFailedLis
 
     // Firebase instance variables
     private var mFirebaseAuth: FirebaseAuth? = null
+    private var firebaseFirestore : FirebaseFirestore? = null
+
+    private var fireBaseUser : FirebaseUser? = null
+    private var userName : String? = ""
+    private var photoUrl : String? = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,9 +57,25 @@ class OnlineExpensesFragment : Fragment(), GoogleApiClient.OnConnectionFailedLis
 
         if (fireBaseUser == null) {
             // Not signed in, launch the Sign In activity
-            startActivity(Intent(this, SignInActivity::class.java))
-            finish()
-            return
+            // Assign fields
+            mSignInButton = sign_in_button
+
+            // Set click listeners
+            mSignInButton!!.setOnClickListener({ _ -> signIn()})
+
+            // Configure Google Sign In
+            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestIdToken(getString(R.string.default_web_client_id))
+                    .requestEmail()
+                    .build()
+
+            mGoogleApiClient = GoogleApiClient.Builder(context)
+                    .enableAutoManage(activity /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                    .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                    .build()
+
+            sign_in_layout.visibility = View.VISIBLE
+            signed_in_layout.visibility = View.GONE
         } else {
             userName = fireBaseUser!!.displayName
             if (fireBaseUser!!.photoUrl != null) {
@@ -60,24 +84,10 @@ class OnlineExpensesFragment : Fragment(), GoogleApiClient.OnConnectionFailedLis
 
             firebaseFirestore = FirebaseFirestore.getInstance()
 
+            sign_in_layout.visibility = View.GONE
+            signed_in_layout.visibility = View.VISIBLE
             //testCreateList()
         }
-
-        // Assign fields
-        mSignInButton = sign_in_button
-
-        // Set click listeners
-        mSignInButton!!.setOnClickListener({ _ -> signIn()})
-
-        // Configure Google Sign In
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build()
-        mGoogleApiClient = GoogleApiClient.Builder(context)
-                .enableAutoManage(activity /* FragmentActivity */, this /* OnConnectionFailedListener */)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build()
 
         // Initialize FirebaseAuth
         mFirebaseAuth = FirebaseAuth.getInstance()
@@ -127,8 +137,15 @@ class OnlineExpensesFragment : Fragment(), GoogleApiClient.OnConnectionFailedLis
                         Toast.makeText(context, "Authentication failed.",
                                 Toast.LENGTH_SHORT).show()
                     } else {
-
+                        sign_in_layout.visibility = View.GONE
+                        signed_in_layout.visibility = View.VISIBLE
                     }
                 }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mGoogleClient.stopAutoManage(activity)
+        mGoogleClient.disconnect()
     }
 }

@@ -50,7 +50,7 @@ class SignInActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLi
         setContentView(R.layout.activity_sign_in)
 
         // Assign fields
-        mSignInButton = sign_in_button
+        mSignInButton = signn_in_button
 
         // Set click listeners
         mSignInButton!!.setOnClickListener({ _ -> signIn()})
