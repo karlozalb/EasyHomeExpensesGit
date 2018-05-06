@@ -1,7 +1,6 @@
 package com.projectclean.easyhomeexpenses
 
 import android.content.Intent
-import android.content.res.Resources
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
@@ -12,11 +11,7 @@ import android.view.Menu
 import android.view.MenuItem
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.projectclean.easyhomeexpenses.activities.NewExpenseActivity
-import com.projectclean.easyhomeexpenses.adapters.ExpensesAdapter
-import com.projectclean.easyhomeexpenses.database.ExpenseDatabaseRequester
 import com.projectclean.easyhomeexpenses.database.ExpensesDataBase
-import com.projectclean.easyhomeexpenses.models.Expense
 
 import kotlinx.android.synthetic.main.activity_main.*
 import com.projectclean.easyhomeexpenses.activities.SignInActivity
@@ -26,7 +21,7 @@ import com.google.android.gms.common.ConnectionResult
 import com.google.firebase.firestore.FirebaseFirestore
 import com.projectclean.easyhomeexpenses.database.FirebaseController
 import com.projectclean.easyhomeexpenses.fragments.OfflineExpensesFragment
-import com.projectclean.easyhomeexpenses.fragments.OnlineExpensesFragmentNotSigned
+import com.projectclean.easyhomeexpenses.fragments.OnlineExpensesFragment
 
 
 class MainActivity : AppCompatActivity(),GoogleApiClient.OnConnectionFailedListener {
@@ -142,7 +137,7 @@ class ViewPagerAdapter(fm : FragmentManager, private var activity: AppCompatActi
             }
             else -> {
                 Log.i("TEST", "getItem = 1")
-                return OnlineExpensesFragmentNotSigned()
+                return OnlineExpensesFragment()
             }
         }
     }
