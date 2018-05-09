@@ -55,6 +55,9 @@ class OnlineExpensesFragment : Fragment(), GoogleApiClient.OnConnectionFailedLis
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        mFirebaseAuth = FirebaseAuth.getInstance()
+        fireBaseUser = mFirebaseAuth!!.currentUser
+
         if (fireBaseUser == null) {
             // Not signed in, launch the Sign In activity
             // Assign fields
@@ -91,6 +94,12 @@ class OnlineExpensesFragment : Fragment(), GoogleApiClient.OnConnectionFailedLis
 
         // Initialize FirebaseAuth
         mFirebaseAuth = FirebaseAuth.getInstance()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mGoogleApiClient!!.stopAutoManage(activity)
+        mGoogleApiClient!!.disconnect()
     }
 
     fun signIn(){
@@ -143,9 +152,4 @@ class OnlineExpensesFragment : Fragment(), GoogleApiClient.OnConnectionFailedLis
                 }
     }
 
-    override fun onPause() {
-        super.onPause()
-        mGoogleClient.stopAutoManage(activity)
-        mGoogleClient.disconnect()
-    }
 }

@@ -24,7 +24,7 @@ import com.projectclean.easyhomeexpenses.fragments.OfflineExpensesFragment
 import com.projectclean.easyhomeexpenses.fragments.OnlineExpensesFragment
 
 
-class MainActivity : AppCompatActivity(),GoogleApiClient.OnConnectionFailedListener {
+class MainActivity : AppCompatActivity() {
 
     val TAG : String = "MainActivity"
     val ANONYMOUS : String = "Anonymous"
@@ -66,8 +66,7 @@ class MainActivity : AppCompatActivity(),GoogleApiClient.OnConnectionFailedListe
 
         updateAdapter()*/
 
-        fireBaseAuth = FirebaseAuth.getInstance()
-        fireBaseUser = fireBaseAuth!!.currentUser
+
 
         /*if (fireBaseUser == null) {
             // Not signed in, launch the Sign In activity
@@ -84,11 +83,6 @@ class MainActivity : AppCompatActivity(),GoogleApiClient.OnConnectionFailedListe
 
             //testCreateList()
         }*/
-
-        mGoogleApiClient = GoogleApiClient.Builder(this)
-                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
-                .addApi(Auth.GOOGLE_SIGN_IN_API)
-                .build()
     }
 
     fun testCreateList()
@@ -122,9 +116,7 @@ class MainActivity : AppCompatActivity(),GoogleApiClient.OnConnectionFailedListe
         }
     }
 
-    override fun onConnectionFailed(connectionResult: ConnectionResult) {
-        Log.d(TAG, "onConnectionFailed:$connectionResult")
-    }
+
 }
 
 class ViewPagerAdapter(fm : FragmentManager, private var activity: AppCompatActivity) : FragmentPagerAdapter(fm) {
