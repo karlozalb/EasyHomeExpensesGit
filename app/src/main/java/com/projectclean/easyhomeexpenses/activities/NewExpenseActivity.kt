@@ -23,7 +23,7 @@ import java.text.SimpleDateFormat
  * Created by Carlos Albaladejo Pérez on 01/03/2018.
  */
 
-class NewExpenseActivity : AppCompatActivity() {
+abstract class NewExpenseActivity : AppCompatActivity() {
 
     companion object {
         const val DateFormat =  "dd.MM.yyyy"
@@ -60,14 +60,11 @@ class NewExpenseActivity : AppCompatActivity() {
             exp.date        = date
 
             try {
-                var number = newExpenseCost.text.toString().toFloat()
-
                 exp.money       = newExpenseCost.text.toString()
                 exp.name        = newExpenseName.text.toString()
                 exp.ownerName   = newExpenseOwner.text.toString()
 
-                var requester = ExpenseDatabaseRequester(ExpensesDataBase.instance!!.expenseDao())
-                requester.InsertExpense(exp, { Log.i("NEWEXPENSE", "New expense added successfully.") })
+                SaveExpense(exp)
 
                 finish()
             }   catch (ex : NumberFormatException){
@@ -91,5 +88,7 @@ class NewExpenseActivity : AppCompatActivity() {
             }
         }
     }
+
+    abstract fun SaveExpense(exp : ExpenseEntity);
 
 }

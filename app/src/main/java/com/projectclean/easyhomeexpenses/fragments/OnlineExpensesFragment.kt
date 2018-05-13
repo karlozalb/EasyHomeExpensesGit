@@ -2,6 +2,7 @@ package com.projectclean.easyhomeexpenses.fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,38 +13,42 @@ import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
+import com.projectclean.easyhomeexpenses.MainActivity
 
 import com.projectclean.easyhomeexpenses.R
-import kotlinx.android.synthetic.main.activity_sign_in.*
+import com.projectclean.easyhomeexpenses.database.FirebaseController
 import kotlinx.android.synthetic.main.online_list_fragment.*
 
-class OnlineExpensesFragment : Fragment(), GoogleApiClient.OnConnectionFailedListener {
+class OnlineExpensesFragment : Fragment(), GoogleApiClient.OnConnectionFailedListener, NewListFragment.NoticeDialogListener {
 
     companion object {
 
         private val TAG = "SignInActivity"
         private val RC_SIGN_IN = 9001
+        private val ANONYMOUS : String = "Anonymous"
     }
 
-    private var mSignInButton: SignInButton? = null
     private var mGoogleApiClient: GoogleApiClient? = null
 
     // Firebase instance variables
     private var mFirebaseAuth: FirebaseAuth? = null
-    private var firebaseFirestore : FirebaseFirestore? = null
+    private var mFirebaseFirestore : FirebaseFirestore? = null
 
-    private var fireBaseUser : FirebaseUser? = null
-    private var userName : String? = ""
-    private var photoUrl : String? = ""
+    private var mFireBaseUser : FirebaseUser? = null
+    private var mUserName : String? = ""
+    private var mPhotoUrl : String? = ""
+
+    private var mListId : String? = ""
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
@@ -55,45 +60,39 @@ class OnlineExpensesFragment : Fragment(), GoogleApiClient.OnConnectionFailedLis
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        (activity as MainActivity).setOnlineFragment(this)
+
         mFirebaseAuth = FirebaseAuth.getInstance()
-        fireBaseUser = mFirebaseAuth!!.currentUser
+        mFireBaseUser = mFirebaseAuth!!.currentUser
 
-        if (fireBaseUser == null) {
-            // Not signed in, launch the Sign In activity
-            // Assign fields
-            mSignInButton = sign_in_button
+        if (mFireBaseUser == null) {
+            sign_in_button.setOnClickListener({ _ -> signIn()})
 
-            // Set click listeners
-            mSignInButton!!.setOnClickListener({ _ -> signIn()})
-
-            // Configure Google Sign In
-            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                    .requestIdToken(getString(R.string.default_web_client_id))
-                    .requestEmail()
-                    .build()
-
-            mGoogleApiClient = GoogleApiClient.Builder(context)
-                    .enableAutoManage(activity /* FragmentActivity */, this /* OnConnectionFailedListener */)
-                    .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                    .build()
-
-            sign_in_layout.visibility = View.VISIBLE
-            signed_in_layout.visibility = View.GONE
+            setUISignedIn(false)
         } else {
-            userName = fireBaseUser!!.displayName
-            if (fireBaseUser!!.photoUrl != null) {
-                photoUrl = fireBaseUser!!.photoUrl.toString()
+            mUserName = mFireBaseUser!!.displayName
+            if (mFireBaseUser!!.photoUrl != null) {
+                mPhotoUrl = mFireBaseUser!!.photoUrl.toString()
             }
 
-            firebaseFirestore = FirebaseFirestore.getInstance()
-
-            sign_in_layout.visibility = View.GONE
-            signed_in_layout.visibility = View.VISIBLE
-            //testCreateList()
+            onSignedIn()
         }
+
+        // Configure Google Sign In
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build()
+
+        mGoogleApiClient = GoogleApiClient.Builder(context)
+                .enableAutoManage(activity /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build()
 
         // Initialize FirebaseAuth
         mFirebaseAuth = FirebaseAuth.getInstance()
+
+        add_online_list_btn.setOnClickListener { createNewListDialog() }
     }
 
     override fun onPause() {
@@ -102,9 +101,10 @@ class OnlineExpensesFragment : Fragment(), GoogleApiClient.OnConnectionFailedLis
         mGoogleApiClient!!.disconnect()
     }
 
-    fun signIn(){
-        var intent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient)
-        startActivityForResult(intent, RC_SIGN_IN)
+    override fun onResume() {
+        super.onResume()
+
+        mGoogleApiClient!!.connect()
     }
 
     override fun onConnectionFailed(connectionResult: ConnectionResult) {
@@ -131,9 +131,41 @@ class OnlineExpensesFragment : Fragment(), GoogleApiClient.OnConnectionFailedLis
         }
     }
 
+    private fun signIn(){
+        var intent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient)
+        startActivityForResult(intent, RC_SIGN_IN)
+    }
+
+    private fun onSignedIn()
+    {
+        setUISignedIn(true)
+
+        mFireBaseUser = mFirebaseAuth!!.currentUser
+        mFirebaseFirestore = FirebaseFirestore.getInstance()
+
+        FirebaseController.init(mFirebaseFirestore!!,mFireBaseUser!!)
+    }
+
+    fun signOut()
+    {
+        mFirebaseAuth!!.signOut()
+        Auth.GoogleSignInApi.signOut(mGoogleApiClient)
+        mUserName = ANONYMOUS
+
+        setUISignedIn(false);
+    }
+
+    private fun setUISignedIn(signedIn : Boolean)
+    {
+        sign_in_layout.visibility = if(signedIn) View.GONE; else View.VISIBLE;
+        signed_in_layout.visibility = if(signedIn) View.VISIBLE; else View.GONE;
+    }
+
     private fun firebaseAuthWithGoogle(acct: GoogleSignInAccount) {
         Log.d(TAG, "firebaseAuthWithGooogle:" + acct.id!!)
+
         val credential = GoogleAuthProvider.getCredential(acct.idToken, null)
+
         mFirebaseAuth!!.signInWithCredential(credential)
                 .addOnCompleteListener(activity) { task  ->
                     Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful)
@@ -146,10 +178,29 @@ class OnlineExpensesFragment : Fragment(), GoogleApiClient.OnConnectionFailedLis
                         Toast.makeText(context, "Authentication failed.",
                                 Toast.LENGTH_SHORT).show()
                     } else {
-                        sign_in_layout.visibility = View.GONE
-                        signed_in_layout.visibility = View.VISIBLE
+                        onSignedIn()
                     }
                 }
+    }
+
+    fun createNewListDialog()
+    {
+        val newFragment = NewListFragment()
+        newFragment.show(childFragmentManager, "NewListFragment")
+    }
+
+    override fun onDialogPositiveClick(dialog: DialogFragment, listName: String) {
+        FirebaseController.instance!!.createNewList(listName,
+                {
+                    listId ->
+                    run{ mListId = listId;Log.i(TAG, "List created successfully with id: " + mListId) }
+                },
+                {
+                    Log.e(TAG, "Error creating a new list.")
+                })
+    }
+
+    override fun onDialogNegativeClick(dialog: DialogFragment) {
     }
 
 }

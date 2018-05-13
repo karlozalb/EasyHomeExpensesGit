@@ -9,10 +9,13 @@
     <string name="expense_owner">Pagador</string>
     <string name="cancel">Cancel</string>
     <string name="sign_in">Sign in</string>
+    <string name="name">Name</string>
+    <string name="ok">Ok</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
     <string name="offline_list">Offline list</string>
     <string name="online_list">Online list</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="create_new_offline_list">Create new offline list</string>
 </resources>

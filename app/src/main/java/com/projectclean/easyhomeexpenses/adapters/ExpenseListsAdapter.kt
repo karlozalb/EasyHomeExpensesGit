@@ -15,7 +15,7 @@ import com.projectclean.easyhomeexpenses.models.Expense
  * Created by Carlos Albaladejo Pérez on 24/02/2018.
  */
 
-class ExpensesAdapter : RecyclerView.Adapter<ExpensesAdapter.ExpenseViewHolder>()
+class ExpenseListsAdapter : RecyclerView.Adapter<ExpenseListsAdapter.ExpenseViewHolder>()
 {
     private var items : List<Expense> = listOf()
 

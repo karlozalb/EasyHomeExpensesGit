@@ -22,6 +22,9 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.projectclean.easyhomeexpenses.database.FirebaseController
 import com.projectclean.easyhomeexpenses.fragments.OfflineExpensesFragment
 import com.projectclean.easyhomeexpenses.fragments.OnlineExpensesFragment
+import android.view.ViewGroup
+
+
 
 
 class MainActivity : AppCompatActivity() {
@@ -29,7 +32,7 @@ class MainActivity : AppCompatActivity() {
     val TAG : String = "MainActivity"
     val ANONYMOUS : String = "Anonymous"
 
-    private var mViewPagerAdapter : FragmentPagerAdapter? = null
+    private var mViewPagerAdapter : ViewPagerAdapter? = null
 
     //Firebase
     private var fireBaseAuth : FirebaseAuth? = null
@@ -39,6 +42,8 @@ class MainActivity : AppCompatActivity() {
 
     private var userName : String? = ""
     private var photoUrl : String? = ""
+
+    private var mOnlineFragment : OnlineExpensesFragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,11 +90,9 @@ class MainActivity : AppCompatActivity() {
         }*/
     }
 
-    fun testCreateList()
+    fun setOnlineFragment(onlineFragment : OnlineExpensesFragment)
     {
-        var fbController = FirebaseController(firebaseFirestore!!, fireBaseUser!!)
-
-        fbController.createNewList({ listId -> Log.i(TAG, listId) } ,{ Log.i(TAG, "Ooops! There was an error!") })
+        mOnlineFragment = onlineFragment
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -102,14 +105,12 @@ class MainActivity : AppCompatActivity() {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
+
+
         return when (item.itemId) {
             R.id.action_settings -> true
             R.id.action_sign_out -> run {
-                fireBaseAuth!!.signOut()
-                Auth.GoogleSignInApi.signOut(mGoogleApiClient)
-                userName = ANONYMOUS
-                startActivity(Intent(this, SignInActivity::class.java))
-                finish()
+                mOnlineFragment?.signOut()
                 return true
             }
             else -> super.onOptionsItemSelected(item)
@@ -120,6 +121,19 @@ class MainActivity : AppCompatActivity() {
 }
 
 class ViewPagerAdapter(fm : FragmentManager, private var activity: AppCompatActivity) : FragmentPagerAdapter(fm) {
+
+    private var mCurrentFragment: Fragment? = null
+
+    fun getCurrentFragment(): Fragment? {
+        return mCurrentFragment
+    }
+
+    override fun setPrimaryItem(container: ViewGroup?, position: Int, `object`: Any) {
+        if (getCurrentFragment() !== `object`) {
+            mCurrentFragment = `object` as Fragment
+        }
+        super.setPrimaryItem(container, position, `object`)
+    }
 
     override fun getItem(position: Int): Fragment {
         when (position) {

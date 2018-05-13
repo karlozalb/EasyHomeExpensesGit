@@ -25,7 +25,7 @@ class FirebaseController(var db : FirebaseFirestore, var user : FirebaseUser)
     val EXPENSES_COLLECTION : String = "ExpensesCollection"
     val LISTS_COLLECTION : String = "ListsCollection"
 
-    fun createExpense(listId : String, expense : Expense, onSuccess : () -> Unit, onError : () -> Unit)
+    fun createExpense(listId : String, expense : ExpenseEntity, onSuccess : () -> Unit, onError : () -> Unit)
     {
         var newExpense = hashMapOf<String,Any>()
 
@@ -44,7 +44,7 @@ class FirebaseController(var db : FirebaseFirestore, var user : FirebaseUser)
                 .addOnFailureListener { onError }
     }
 
-    fun updateExpense(listId : String, expenseId : String, expense : Expense, onSuccess : () -> Unit, onError : () -> Unit)
+    fun updateExpense(listId : String, expenseId : String, expense : ExpenseEntity, onSuccess : () -> Unit, onError : () -> Unit)
     {
         var updatedExpense = hashMapOf<String,Any>()
 
@@ -63,7 +63,7 @@ class FirebaseController(var db : FirebaseFirestore, var user : FirebaseUser)
                 .addOnFailureListener { onError }
     }
 
-    fun createNewList(onSuccess : (String) -> Unit, onError : () -> Unit)
+    fun createNewList(name : String, onSuccess : (String) -> Unit, onError : () -> Unit)
     {
         var newList = hashMapOf<String,Any>()
 
@@ -71,6 +71,7 @@ class FirebaseController(var db : FirebaseFirestore, var user : FirebaseUser)
 
         newList["creator_id"] = user.uid
         newList["shared_with"] = sharedWith
+        newList["name"] = name
 
         db.collection(LISTS_COLLECTION)
                 .add(newList)
@@ -78,7 +79,7 @@ class FirebaseController(var db : FirebaseFirestore, var user : FirebaseUser)
                     task -> run{
                         if (task.isSuccessful)
                         {
-                            var list : DocumentReference = task.result;
+                            var list : DocumentReference = task.result
                             onSuccess(list.id)
                         }
                     }
