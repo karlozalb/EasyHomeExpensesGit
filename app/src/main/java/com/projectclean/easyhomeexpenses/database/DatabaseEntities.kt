@@ -20,5 +20,16 @@ class ExpenseEntity
     var date: Date = Date()
     var money: String = "0.0"
 
+}
+
+@Entity(tableName = "lists")
+class ListEntity
+{
+
+    @PrimaryKey(autoGenerate = true)
+    var id : Int = 0
+
+    var name: String = ""
+    var ownerName: String = ""
 
 }

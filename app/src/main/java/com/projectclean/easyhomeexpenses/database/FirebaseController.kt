@@ -87,7 +87,7 @@ class FirebaseController(var db : FirebaseFirestore, var user : FirebaseUser)
                 .addOnFailureListener { onError }
     }
 
-    fun getList()
+    fun getLists()
     {
         db.collection(LISTS_COLLECTION).get().addOnCompleteListener { task -> run{
             if (task.isSuccessful)

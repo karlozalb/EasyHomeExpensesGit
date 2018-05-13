@@ -4,10 +4,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
+import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ListAdapter
 import android.widget.Toast
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -21,7 +23,10 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.projectclean.easyhomeexpenses.MainActivity
 
 import com.projectclean.easyhomeexpenses.R
+import com.projectclean.easyhomeexpenses.adapters.ExpenseListsAdapter
+import com.projectclean.easyhomeexpenses.adapters.ExpensesAdapter
 import com.projectclean.easyhomeexpenses.database.FirebaseController
+import kotlinx.android.synthetic.main.offline_list_fragment.*
 import kotlinx.android.synthetic.main.online_list_fragment.*
 
 class OnlineExpensesFragment : Fragment(), GoogleApiClient.OnConnectionFailedListener, NewListFragment.NoticeDialogListener {
@@ -44,6 +49,9 @@ class OnlineExpensesFragment : Fragment(), GoogleApiClient.OnConnectionFailedLis
     private var mPhotoUrl : String? = ""
 
     private var mListId : String? = ""
+
+    //List adapter
+    private lateinit var mMainAdapter : ExpenseListsAdapter
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -144,6 +152,11 @@ class OnlineExpensesFragment : Fragment(), GoogleApiClient.OnConnectionFailedLis
         mFirebaseFirestore = FirebaseFirestore.getInstance()
 
         FirebaseController.init(mFirebaseFirestore!!,mFireBaseUser!!)
+
+        mMainAdapter = ExpenseListsAdapter()
+
+        lists_recycler_view.layoutManager = LinearLayoutManager(context)
+        lists_recycler_view.adapter = mMainAdapter
     }
 
     fun signOut()
