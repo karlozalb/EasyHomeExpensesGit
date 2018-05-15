@@ -4,12 +4,11 @@ import android.databinding.DataBindingUtil
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Toast
 import com.android.databinding.library.baseAdapters.BR
 import com.projectclean.easyhomeexpenses.R
-import com.projectclean.easyhomeexpenses.databinding.ExpenseViewBinding
+import com.projectclean.easyhomeexpenses.database.FirebaseController
 import com.projectclean.easyhomeexpenses.databinding.ListViewBinding
-import com.projectclean.easyhomeexpenses.models.Expense
+import com.projectclean.easyhomeexpenses.models.ExpenseList
 
 /**
  * Created by Carlos Albaladejo Pérez on 24/02/2018.
@@ -17,13 +16,13 @@ import com.projectclean.easyhomeexpenses.models.Expense
 
 class ExpenseListsAdapter : RecyclerView.Adapter<ExpenseListsAdapter.ListViewHolder>()
 {
-    private var items : List<com.projectclean.easyhomeexpenses.models.List> = listOf()
+    private var items : List<ExpenseList> = listOf()
 
     class ListViewHolder(var binding: ListViewBinding) : RecyclerView.ViewHolder(binding.root)
     {
-        fun bind(list: com.projectclean.easyhomeexpenses.models.List)
+        fun bind(expenseList: ExpenseList)
         {
-            binding.setVariable(BR.expense, list)
+            binding.setVariable(BR.expense, expenseList)
             binding.executePendingBindings()
         }
     }
@@ -40,9 +39,13 @@ class ExpenseListsAdapter : RecyclerView.Adapter<ExpenseListsAdapter.ListViewHol
 
     override fun getItemCount() = items.size
 
-    fun setElements(items : List<com.projectclean.easyhomeexpenses.models.List>){
-        this.items = items
-        notifyDataSetChanged()
+    fun updateContents(){
+        FirebaseController.instance?.getLists(
+            {list -> run {
+                this.items = list
+                notifyDataSetChanged()
+            }}
+        )
     }
 
 }

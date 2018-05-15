@@ -50,7 +50,7 @@ class OnlineExpensesFragment : Fragment(), GoogleApiClient.OnConnectionFailedLis
 
     private var mListId : String? = ""
 
-    //List adapter
+    //ExpenseList adapter
     private lateinit var mMainAdapter : ExpenseListsAdapter
 
 
@@ -157,6 +157,8 @@ class OnlineExpensesFragment : Fragment(), GoogleApiClient.OnConnectionFailedLis
 
         lists_recycler_view.layoutManager = LinearLayoutManager(context)
         lists_recycler_view.adapter = mMainAdapter
+
+        mMainAdapter.updateContents()
     }
 
     fun signOut()
@@ -165,7 +167,7 @@ class OnlineExpensesFragment : Fragment(), GoogleApiClient.OnConnectionFailedLis
         Auth.GoogleSignInApi.signOut(mGoogleApiClient)
         mUserName = ANONYMOUS
 
-        setUISignedIn(false);
+        setUISignedIn(false)
     }
 
     private fun setUISignedIn(signedIn : Boolean)
@@ -206,7 +208,7 @@ class OnlineExpensesFragment : Fragment(), GoogleApiClient.OnConnectionFailedLis
         FirebaseController.instance!!.createNewList(listName,
                 {
                     listId ->
-                    run{ mListId = listId;Log.i(TAG, "List created successfully with id: " + mListId) }
+                    run{ mListId = listId;Log.i(TAG, "ExpenseList created successfully with id: " + mListId) }
                 },
                 {
                     Log.e(TAG, "Error creating a new list.")

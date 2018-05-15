@@ -14,8 +14,8 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
 
-    <string name="offline_list">Offline list</string>
-    <string name="online_list">Online list</string>
+    <string name="offline_list">Offline expenseList</string>
+    <string name="online_list">Online expenseList</string>
 
-    <string name="create_new_offline_list">Create new offline list</string>
+    <string name="create_new_offline_list">Create new offline expenseList</string>
 </resources>

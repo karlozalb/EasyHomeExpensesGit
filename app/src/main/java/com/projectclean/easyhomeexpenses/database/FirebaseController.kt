@@ -3,6 +3,7 @@ package com.projectclean.easyhomeexpenses.database
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.*
 import com.projectclean.easyhomeexpenses.models.Expense
+import com.projectclean.easyhomeexpenses.models.ExpenseList
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
@@ -87,17 +88,20 @@ class FirebaseController(var db : FirebaseFirestore, var user : FirebaseUser)
                 .addOnFailureListener { onError }
     }
 
-    fun getLists()
+    fun getLists(onSuccess : (List<ExpenseList>) -> Unit )
     {
         db.collection(LISTS_COLLECTION).get().addOnCompleteListener { task -> run{
             if (task.isSuccessful)
             {
                 var list : List<DocumentSnapshot> = task.result.documents
 
+                var expensesList = mutableListOf<ExpenseList>()
+
                 list.forEach { document -> run {
-                    println(document.data["creator_id"])
-                    println(document.data["shared_with"])
+                    expensesList.add(ExpenseList(document.data["name"].toString(),document.data["owner_name"].toString(), document.data["shared_with"].toString(),document.id))
                 } }
+
+                onSuccess(expensesList)
             }
         } }
     }

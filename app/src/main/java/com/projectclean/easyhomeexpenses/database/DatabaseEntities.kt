@@ -31,5 +31,6 @@ class ListEntity
 
     var name: String = ""
     var ownerName: String = ""
+    var sharedWith: String = ""
 
 }

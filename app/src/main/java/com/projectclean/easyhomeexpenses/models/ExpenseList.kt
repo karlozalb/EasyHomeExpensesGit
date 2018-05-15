@@ -11,10 +11,10 @@ import java.util.*
  * Created by Carlos Albaladejo Pérez on 24/02/2018.
  */
 
-data class List(var pname: String, var pownername: String) : BaseObservable()
+data class ExpenseList(var pname: String, var pownername: String, var psharedwith: String, var plistId: String) : BaseObservable()
 {
 
-    constructor(list: ListEntity) : this(list.name, list.ownerName)
+    constructor(list: ListEntity) : this(list.name, list.ownerName, list.sharedWith ,list.id.toString())
 
     var name : String = pname
     @Bindable
@@ -35,4 +35,5 @@ data class List(var pname: String, var pownername: String) : BaseObservable()
         ownerName = value
         notifyPropertyChanged(BR.ownerName)
     }
+
 }
