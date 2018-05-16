@@ -2,7 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
     <data>
-        <variable name="expense" type="com.projectclean.easyhomeexpenses.models.Expense"/>
+        <variable name="list" type="com.projectclean.easyhomeexpenses.models.ExpenseList"/>
     </data>
 
     <LinearLayout
@@ -11,31 +11,17 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/newExpenseName"
+            android:id="@+id/newListName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@{expense.name}"
+            android:text="@{list.name}"
             tools:text="Gastos de la casa 1" />
 
         <TextView
-            android:id="@+id/expenseDate"
+            android:id="@+id/listOwnerName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@{expense.date.toString()}"
-            tools:text="10/01/2018" />
-
-        <TextView
-            android:id="@+id/newExpenseCost"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@{expense.money}"
-            tools:text="70,3" />
-
-        <TextView
-            android:id="@+id/expenseOwnerName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@{expense.ownerName}"
+            android:text="@{list.ownerName}"
             tools:text="Laura" />
 
     </LinearLayout>

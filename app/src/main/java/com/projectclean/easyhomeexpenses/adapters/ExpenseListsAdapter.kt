@@ -2,6 +2,7 @@ package com.projectclean.easyhomeexpenses.adapters
 
 import android.databinding.DataBindingUtil
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.android.databinding.library.baseAdapters.BR
@@ -22,7 +23,7 @@ class ExpenseListsAdapter : RecyclerView.Adapter<ExpenseListsAdapter.ListViewHol
     {
         fun bind(expenseList: ExpenseList)
         {
-            binding.setVariable(BR.expense, expenseList)
+            binding.setVariable(BR.list, expenseList)
             binding.executePendingBindings()
         }
     }
@@ -42,6 +43,7 @@ class ExpenseListsAdapter : RecyclerView.Adapter<ExpenseListsAdapter.ListViewHol
     fun updateContents(){
         FirebaseController.instance?.getLists(
             {list -> run {
+                Log.d("OnlineFragment","updateContents SUCCESSFUL.")
                 this.items = list
                 notifyDataSetChanged()
             }}

@@ -23,7 +23,7 @@ class ExpensesAdapter : RecyclerView.Adapter<ExpensesAdapter.ExpenseViewHolder>(
     {
         fun bind(expense: Expense)
         {
-            binding.setVariable(BR.expense, expense)
+            binding.setVariable(BR.list, expense)
             binding.executePendingBindings()
         }
     }
@@ -31,7 +31,7 @@ class ExpensesAdapter : RecyclerView.Adapter<ExpensesAdapter.ExpenseViewHolder>(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) : ExpenseViewHolder
     {
         val layoutInflater = LayoutInflater.from(parent.context)
-        val binding : ExpenseViewBinding = DataBindingUtil.inflate(layoutInflater, R.layout.expense_view, parent, false)
+        val binding : ExpenseViewBinding = DataBindingUtil.inflate(layoutInflater, R.layout.list_view, parent, false)
 
         return ExpenseViewHolder(binding)
     }
