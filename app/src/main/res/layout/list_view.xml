@@ -3,11 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools">
     <data>
         <variable name="list" type="com.projectclean.easyhomeexpenses.models.ExpenseList"/>
+        <variable name="fragment" type="com.projectclean.easyhomeexpenses.fragments.OnlineListsFragment"/>
     </data>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        android:onClick="@{() -> fragment.onItemClicked(list)}"
         android:orientation="vertical">
 
         <TextView
@@ -15,6 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@{list.name}"
+            android:textSize="18sp"
             tools:text="Gastos de la casa 1" />
 
         <TextView

@@ -26,10 +26,11 @@ import com.projectclean.easyhomeexpenses.R
 import com.projectclean.easyhomeexpenses.adapters.ExpenseListsAdapter
 import com.projectclean.easyhomeexpenses.adapters.ExpensesAdapter
 import com.projectclean.easyhomeexpenses.database.FirebaseController
+import com.projectclean.easyhomeexpenses.models.ExpenseList
 import kotlinx.android.synthetic.main.offline_list_fragment.*
 import kotlinx.android.synthetic.main.online_list_fragment.*
 
-class OnlineExpensesFragment : Fragment(), GoogleApiClient.OnConnectionFailedListener, NewListFragment.NoticeDialogListener {
+class OnlineListsFragment : Fragment(), GoogleApiClient.OnConnectionFailedListener, NewListFragment.NoticeDialogListener {
 
     companion object {
 
@@ -153,7 +154,7 @@ class OnlineExpensesFragment : Fragment(), GoogleApiClient.OnConnectionFailedLis
 
         FirebaseController.init(mFirebaseFirestore!!,mFireBaseUser!!)
 
-        mMainAdapter = ExpenseListsAdapter()
+        mMainAdapter = ExpenseListsAdapter(this)
 
         lists_recycler_view.layoutManager = LinearLayoutManager(context)
         lists_recycler_view.adapter = mMainAdapter
@@ -218,4 +219,8 @@ class OnlineExpensesFragment : Fragment(), GoogleApiClient.OnConnectionFailedLis
     override fun onDialogNegativeClick(dialog: DialogFragment) {
     }
 
+    fun onItemClicked(list: ExpenseList)
+    {
+        Log.e(TAG, "list:"+list.listId)
+    }
 }

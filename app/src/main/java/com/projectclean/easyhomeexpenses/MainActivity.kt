@@ -1,6 +1,5 @@
 package com.projectclean.easyhomeexpenses
 
-import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
@@ -14,14 +13,10 @@ import com.google.firebase.auth.FirebaseUser
 import com.projectclean.easyhomeexpenses.database.ExpensesDataBase
 
 import kotlinx.android.synthetic.main.activity_main.*
-import com.projectclean.easyhomeexpenses.activities.SignInActivity
-import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.common.api.GoogleApiClient
-import com.google.android.gms.common.ConnectionResult
 import com.google.firebase.firestore.FirebaseFirestore
-import com.projectclean.easyhomeexpenses.database.FirebaseController
-import com.projectclean.easyhomeexpenses.fragments.OfflineExpensesFragment
-import com.projectclean.easyhomeexpenses.fragments.OnlineExpensesFragment
+import com.projectclean.easyhomeexpenses.fragments.OfflineListsFragment
+import com.projectclean.easyhomeexpenses.fragments.OnlineListsFragment
 import android.view.ViewGroup
 
 
@@ -43,7 +38,7 @@ class MainActivity : AppCompatActivity() {
     private var userName : String? = ""
     private var photoUrl : String? = ""
 
-    private var mOnlineFragment : OnlineExpensesFragment? = null
+    private var mOnlineFragment : OnlineListsFragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,7 +85,7 @@ class MainActivity : AppCompatActivity() {
         }*/
     }
 
-    fun setOnlineFragment(onlineFragment : OnlineExpensesFragment)
+    fun setOnlineFragment(onlineFragment : OnlineListsFragment)
     {
         mOnlineFragment = onlineFragment
     }
@@ -139,11 +134,11 @@ class ViewPagerAdapter(fm : FragmentManager, private var activity: AppCompatActi
         when (position) {
             0 -> {
                 Log.i("TEST", "getItem = 0")
-                return OfflineExpensesFragment()
+                return OfflineListsFragment()
             }
             else -> {
                 Log.i("TEST", "getItem = 1")
-                return OnlineExpensesFragment()
+                return OnlineListsFragment()
             }
         }
     }

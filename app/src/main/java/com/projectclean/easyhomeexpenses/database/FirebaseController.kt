@@ -31,7 +31,6 @@ class FirebaseController(var db : FirebaseFirestore, var user : FirebaseUser)
         var newExpense = hashMapOf<String,Any>()
 
         newExpense["creator_id"] = user.uid
-        newExpense["list_id"] = listId
         newExpense["name"] = expense.name
         newExpense["date"] = expense.date
         newExpense["money"] = expense.money

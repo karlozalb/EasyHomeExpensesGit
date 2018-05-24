@@ -11,7 +11,7 @@ import java.util.*
  * Created by Carlos Albaladejo Pérez on 24/02/2018.
  */
 
-data class ExpenseList(var pname: String, var pownername: String, var psharedwith: String, var plistId: String) : BaseObservable()
+data class ExpenseList(private var pname: String,private var pownername: String, var sharedwith: String, var listId: String) : BaseObservable()
 {
 
     constructor(list: ListEntity) : this(list.name, list.ownerName, list.sharedWith ,list.id.toString())

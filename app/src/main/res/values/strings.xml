@@ -18,4 +18,5 @@
     <string name="online_list">Online expenseList</string>
 
     <string name="create_new_offline_list">Create new offline expenseList</string>
+    <string name="title_activity_expenses">ExpensesActivity</string>
 </resources>

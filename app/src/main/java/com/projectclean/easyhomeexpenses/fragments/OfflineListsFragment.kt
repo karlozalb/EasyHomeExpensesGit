@@ -16,7 +16,7 @@ import com.projectclean.easyhomeexpenses.database.ExpensesDataBase
 import com.projectclean.easyhomeexpenses.models.Expense
 import kotlinx.android.synthetic.main.offline_list_fragment.*
 
-class OfflineExpensesFragment : Fragment() {
+class OfflineListsFragment : Fragment() {
 
     private var mainAdapter : ExpensesAdapter? = null
     private var databaseRequester : ExpenseDatabaseRequester? = null
@@ -27,10 +27,7 @@ class OfflineExpensesFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-
-        var view = inflater!!.inflate(R.layout.offline_list_fragment, container, false)
-
-        return view
+        return inflater!!.inflate(R.layout.offline_list_fragment, container, false)
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {

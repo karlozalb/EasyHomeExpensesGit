@@ -5,25 +5,27 @@ import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.android.databinding.library.baseAdapters.BR
+import com.projectclean.easyhomeexpenses.BR
 import com.projectclean.easyhomeexpenses.R
 import com.projectclean.easyhomeexpenses.database.FirebaseController
 import com.projectclean.easyhomeexpenses.databinding.ListViewBinding
+import com.projectclean.easyhomeexpenses.fragments.OnlineListsFragment
 import com.projectclean.easyhomeexpenses.models.ExpenseList
 
 /**
  * Created by Carlos Albaladejo Pérez on 24/02/2018.
  */
 
-class ExpenseListsAdapter : RecyclerView.Adapter<ExpenseListsAdapter.ListViewHolder>()
+class ExpenseListsAdapter(var ownerFragment: OnlineListsFragment) : RecyclerView.Adapter<ExpenseListsAdapter.ListViewHolder>()
 {
     private var items : List<ExpenseList> = listOf()
 
-    class ListViewHolder(var binding: ListViewBinding) : RecyclerView.ViewHolder(binding.root)
+    class ListViewHolder(var binding: ListViewBinding, var ownerFragment: OnlineListsFragment) : RecyclerView.ViewHolder(binding.root)
     {
         fun bind(expenseList: ExpenseList)
         {
             binding.setVariable(BR.list, expenseList)
+            binding.setVariable(BR.fragment, ownerFragment)
             binding.executePendingBindings()
         }
     }
@@ -33,7 +35,7 @@ class ExpenseListsAdapter : RecyclerView.Adapter<ExpenseListsAdapter.ListViewHol
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding : ListViewBinding = DataBindingUtil.inflate(layoutInflater, R.layout.list_view, parent, false)
 
-        return ListViewHolder(binding)
+        return ListViewHolder(binding, ownerFragment)
     }
 
     override fun onBindViewHolder(holder: ListViewHolder, position: Int) = holder.bind(items[position])
