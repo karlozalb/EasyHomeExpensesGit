@@ -9,7 +9,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ListAdapter
 import android.widget.Toast
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -21,13 +20,11 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
 import com.projectclean.easyhomeexpenses.MainActivity
-
 import com.projectclean.easyhomeexpenses.R
+import com.projectclean.easyhomeexpenses.activities.ExpensesActivity
 import com.projectclean.easyhomeexpenses.adapters.ExpenseListsAdapter
-import com.projectclean.easyhomeexpenses.adapters.ExpensesAdapter
 import com.projectclean.easyhomeexpenses.database.FirebaseController
 import com.projectclean.easyhomeexpenses.models.ExpenseList
-import kotlinx.android.synthetic.main.offline_list_fragment.*
 import kotlinx.android.synthetic.main.online_list_fragment.*
 
 class OnlineListsFragment : Fragment(), GoogleApiClient.OnConnectionFailedListener, NewListFragment.NoticeDialogListener {
@@ -222,5 +219,10 @@ class OnlineListsFragment : Fragment(), GoogleApiClient.OnConnectionFailedListen
     fun onItemClicked(list: ExpenseList)
     {
         Log.e(TAG, "list:"+list.listId)
+
+        var intent = Intent(context, ExpensesActivity::class.java)
+        intent.putExtra(ExpensesActivity.ONLINE_MODE, true)
+        intent.putExtra(ExpensesActivity.LIST_ID, list.listId)
+        startActivity(intent)
     }
 }

@@ -4,6 +4,11 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.*
 import com.projectclean.easyhomeexpenses.models.Expense
 import com.projectclean.easyhomeexpenses.models.ExpenseList
+import java.lang.Float.parseFloat
+import java.lang.Long.parseLong
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.*
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
@@ -36,7 +41,7 @@ class FirebaseController(var db : FirebaseFirestore, var user : FirebaseUser)
         newExpense["money"] = expense.money
         newExpense["ownerName"] = expense.ownerName
 
-        db.collection(LISTS_COLLECTION)
+        db.collection(EXPENSES_COLLECTION)
                 .document(listId)
                 .collection(EXPENSES_COLLECTION)
                 .add(expense)
@@ -61,6 +66,24 @@ class FirebaseController(var db : FirebaseFirestore, var user : FirebaseUser)
                 .set(updatedExpense, SetOptions.merge())
                 .addOnCompleteListener { onSuccess() }
                 .addOnFailureListener { onError }
+    }
+
+    fun getExpenses(listId: String, onSuccess : (List<Expense>) -> Unit )
+    {
+        db.collection(LISTS_COLLECTION).document(listId).collection(EXPENSES_COLLECTION).get().addOnCompleteListener { task -> run{
+            if (task.isSuccessful)
+            {
+                var list : List<DocumentSnapshot> = task.result.documents
+
+                var expenses = mutableListOf<Expense>()
+
+                list.forEach { document -> run {
+                    expenses.add(Expense(document.data["name"].toString(), Date(document.data["date"].toString()),parseFloat(document.data["money"].toString()),document.data["owner_name"].toString(),document.id))
+                } }
+
+                onSuccess(expenses)
+            }
+        } }
     }
 
     fun createNewList(name : String, onSuccess : (String) -> Unit, onError : () -> Unit)

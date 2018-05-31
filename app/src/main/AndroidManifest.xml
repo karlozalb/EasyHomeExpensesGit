@@ -21,7 +21,7 @@
         </activity>
 
         <activity
-            android:name=".activities.NewExpenseActivity"
+            android:name=".activities.ExpensesActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity

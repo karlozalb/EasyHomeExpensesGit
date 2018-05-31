@@ -10,10 +10,10 @@ import java.util.*
  * Created by Carlos Albaladejo Pérez on 24/02/2018.
  */
 
-data class Expense(var pname: String, var pdate: Date, var pmoney: Float, var pownername: String) : BaseObservable()
+data class Expense(var pname: String, var pdate: Date, var pmoney: Float, var pownername: String, var id : String) : BaseObservable()
 {
 
-    constructor(expense: ExpenseEntity) : this(expense.name,expense.date,expense.money.toFloat(),expense.ownerName)
+    constructor(expense: ExpenseEntity) : this(expense.name,expense.date,expense.money.toFloat(),expense.ownerName, "")
 
     var name : String = pname
     @Bindable
