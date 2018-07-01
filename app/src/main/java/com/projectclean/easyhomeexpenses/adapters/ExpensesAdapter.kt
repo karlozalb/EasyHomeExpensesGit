@@ -40,7 +40,8 @@ class ExpensesAdapter : RecyclerView.Adapter<ExpensesAdapter.ExpenseViewHolder>(
 
     override fun getItemCount() = items.size
 
-    fun setElements(items : List<Expense>){
+    fun setElements(items : List<Expense>)
+    {
         this.items = items
         notifyDataSetChanged()
     }

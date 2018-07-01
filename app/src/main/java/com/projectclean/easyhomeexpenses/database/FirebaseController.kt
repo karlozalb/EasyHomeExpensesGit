@@ -41,7 +41,7 @@ class FirebaseController(var db : FirebaseFirestore, var user : FirebaseUser)
         newExpense["money"] = expense.money
         newExpense["ownerName"] = expense.ownerName
 
-        db.collection(EXPENSES_COLLECTION)
+        db.collection(LISTS_COLLECTION)
                 .document(listId)
                 .collection(EXPENSES_COLLECTION)
                 .add(expense)

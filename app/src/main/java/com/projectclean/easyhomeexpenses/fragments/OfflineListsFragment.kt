@@ -35,8 +35,8 @@ class OfflineListsFragment : Fragment() {
 
         mainAdapter = ExpensesAdapter()
 
-        expenses_recycler_view.layoutManager = LinearLayoutManager(context)
-        expenses_recycler_view.adapter = mainAdapter
+        offline_lists_recycler_view.layoutManager = LinearLayoutManager(context)
+        offline_lists_recycler_view.adapter = mainAdapter
 
         databaseRequester = ExpenseDatabaseRequester(ExpensesDataBase.instance!!.expenseDao())
 

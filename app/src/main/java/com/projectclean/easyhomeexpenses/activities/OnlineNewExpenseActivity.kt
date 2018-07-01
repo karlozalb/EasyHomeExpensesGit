@@ -27,9 +27,25 @@ import java.text.SimpleDateFormat
 
 class OnlineNewExpenseActivity : NewExpenseActivity() {
 
+    companion object {
+        var LIST_ID = "LIST_ID"
+        var TAG = "OnlineNewExpenseActivity"
+    }
+
+    private lateinit var mListId : String
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        mListId = intent.getStringExtra(LIST_ID)
+    }
+
    override fun SaveExpense(exp : ExpenseEntity)
    {
-       FirebaseController.instance!!.createExpense("",exp,{},{})
+       FirebaseController.instance?.createExpense(mListId,exp,
+               { Log.d(TAG, "Expense added successfully.")},
+               { Log.e(TAG, "Error adding expense.")}
+       )
    }
 
 }

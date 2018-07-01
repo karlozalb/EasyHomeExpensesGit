@@ -2,10 +2,12 @@ package com.projectclean.easyhomeexpenses.activities
 
 import android.os.Bundle
 import android.app.Activity
+import android.content.Intent
 import android.support.v7.widget.LinearLayoutManager
 import com.projectclean.easyhomeexpenses.R
 import com.projectclean.easyhomeexpenses.adapters.ExpensesAdapter
 import com.projectclean.easyhomeexpenses.database.FirebaseController
+import kotlinx.android.synthetic.main.activity_expenses.*
 import kotlinx.android.synthetic.main.offline_list_fragment.*
 
 class ExpensesActivity : Activity() {
@@ -23,6 +25,12 @@ class ExpensesActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_expenses)
+
+        add_expense_btn.setOnClickListener(
+                {
+                    addExpense()
+                }
+        );
 
         setAdapter()
 
@@ -58,6 +66,12 @@ class ExpensesActivity : Activity() {
         {
 
         }
+    }
+
+    private fun addExpense()
+    {
+        var intent = Intent(this, NewExpenseActivity::class.java)
+        startActivity(intent)
     }
 
 }
