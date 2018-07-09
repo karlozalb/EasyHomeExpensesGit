@@ -4,17 +4,19 @@ import android.os.Bundle
 import android.app.Activity
 import android.content.Intent
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import com.projectclean.easyhomeexpenses.R
 import com.projectclean.easyhomeexpenses.adapters.ExpensesAdapter
 import com.projectclean.easyhomeexpenses.database.FirebaseController
+import com.projectclean.easyhomeexpenses.models.Expense
 import kotlinx.android.synthetic.main.activity_expenses.*
-import kotlinx.android.synthetic.main.offline_list_fragment.*
 
 class ExpensesActivity : Activity() {
 
     companion object {
         val ONLINE_MODE : String = "ONLINE_MODE"
         val LIST_ID : String = "LIST_ID"
+        val TAG = "ExpensesActivity"
     }
 
     private var mOnlineMode : Boolean = false
@@ -70,7 +72,18 @@ class ExpensesActivity : Activity() {
 
     private fun addExpense()
     {
-        var intent = Intent(this, NewExpenseActivity::class.java)
+        var intent = Intent(this, OnlineNewExpenseActivity::class.java)
+        intent.putExtra(OnlineNewExpenseActivity.LIST_ID,mListId);
+        startActivity(intent)
+    }
+
+    fun onItemClicked(expense: Expense)
+    {
+        Log.e(TAG, "list:"+expense.id)
+
+        var intent = Intent(this, ExpensesActivity::class.java)
+        intent.putExtra(ExpensesActivity.ONLINE_MODE, true)
+        intent.putExtra(ExpensesActivity.LIST_ID, list.listId)
         startActivity(intent)
     }
 

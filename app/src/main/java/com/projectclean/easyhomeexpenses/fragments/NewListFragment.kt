@@ -53,7 +53,7 @@ class NewListFragment : DialogFragment() {
                 .setPositiveButton(R.string.ok, { dialogInterface: DialogInterface, i: Int ->
                     mListener!!.onDialogPositiveClick(this, mListNameText!!.text.toString())
                 })
-                .setNegativeButton(R.string.ok, { dialogInterface: DialogInterface, i: Int ->
+                .setNegativeButton(R.string.cancel, { dialogInterface: DialogInterface, i: Int ->
                     this@NewListFragment.dialog.cancel()
                     mListener!!.onDialogNegativeClick(this)
                 })
