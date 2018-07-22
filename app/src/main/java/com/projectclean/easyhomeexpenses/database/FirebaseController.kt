@@ -68,6 +68,17 @@ class FirebaseController(var db : FirebaseFirestore, var user : FirebaseUser)
                 .addOnFailureListener { onError }
     }
 
+    fun deleteExpense(listId :  String, expenseId : String, onSuccess : () -> Unit, onError : () -> Unit)
+    {
+        db.collection(LISTS_COLLECTION)
+                .document(listId)
+                .collection(EXPENSES_COLLECTION)
+                .document(expenseId)
+                .delete()
+                .addOnCompleteListener { onSuccess() }
+                .addOnFailureListener { onError }
+    }
+
     fun getExpenses(listId: String, onSuccess : (List<Expense>) -> Unit )
     {
         db.collection(LISTS_COLLECTION).document(listId).collection(EXPENSES_COLLECTION).get().addOnCompleteListener { task -> run{
@@ -78,7 +89,7 @@ class FirebaseController(var db : FirebaseFirestore, var user : FirebaseUser)
                 var expenses = mutableListOf<Expense>()
 
                 list.forEach { document -> run {
-                    expenses.add(Expense(document.data["name"].toString(), Date(document.data["date"].toString()),parseFloat(document.data["money"].toString()),document.data["owner_name"].toString(),document.id))
+                    expenses.add(Expense(document.data["name"].toString(), Date(document.data["date"].toString()),parseFloat(document.data["money"].toString()),document.data["ownerName"].toString(),document.id))
                 } }
 
                 onSuccess(expenses)
@@ -120,7 +131,7 @@ class FirebaseController(var db : FirebaseFirestore, var user : FirebaseUser)
                 var expensesList = mutableListOf<ExpenseList>()
 
                 list.forEach { document -> run {
-                    expensesList.add(ExpenseList(document.data["name"].toString(),document.data["owner_name"].toString(), document.data["shared_with"].toString(),document.id))
+                    expensesList.add(ExpenseList(document.data["name"].toString(),document.data["ownerName"].toString(), document.data["sharedWith"].toString(),document.id))
                 } }
 
                 onSuccess(expensesList)

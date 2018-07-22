@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
+import android.support.v4.app.ListFragment
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.LayoutInflater
@@ -27,9 +28,10 @@ import com.projectclean.easyhomeexpenses.database.FirebaseController
 import com.projectclean.easyhomeexpenses.models.ExpenseList
 import kotlinx.android.synthetic.main.online_list_fragment.*
 
-class OnlineListsFragment : Fragment(), GoogleApiClient.OnConnectionFailedListener, NewListFragment.NoticeDialogListener {
+class OnlineListsFragment : ExpensesListFragment(), GoogleApiClient.OnConnectionFailedListener, NewListFragment.NoticeDialogListener {
 
     companion object {
+
 
         private val TAG = "SignInActivity"
         private val RC_SIGN_IN = 9001
@@ -216,7 +218,7 @@ class OnlineListsFragment : Fragment(), GoogleApiClient.OnConnectionFailedListen
     override fun onDialogNegativeClick(dialog: DialogFragment) {
     }
 
-    fun onItemClicked(list: ExpenseList)
+    override fun onItemClicked(list: ExpenseList)
     {
         Log.e(TAG, "list:"+list.listId)
 

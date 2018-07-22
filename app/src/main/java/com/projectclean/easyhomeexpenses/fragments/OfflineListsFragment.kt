@@ -10,15 +10,17 @@ import android.view.ViewGroup
 
 import com.projectclean.easyhomeexpenses.R
 import com.projectclean.easyhomeexpenses.activities.NewExpenseActivity
+import com.projectclean.easyhomeexpenses.adapters.ExpenseListsAdapter
 import com.projectclean.easyhomeexpenses.adapters.ExpensesAdapter
 import com.projectclean.easyhomeexpenses.database.ExpenseDatabaseRequester
 import com.projectclean.easyhomeexpenses.database.ExpensesDataBase
 import com.projectclean.easyhomeexpenses.models.Expense
+import com.projectclean.easyhomeexpenses.models.ExpenseList
 import kotlinx.android.synthetic.main.offline_list_fragment.*
 
-class OfflineListsFragment : Fragment() {
+class OfflineListsFragment : ExpensesListFragment() {
 
-    private var mainAdapter : ExpensesAdapter? = null
+    private var mainAdapter : ExpenseListsAdapter? = null
     private var databaseRequester : ExpenseDatabaseRequester? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,7 +35,7 @@ class OfflineListsFragment : Fragment() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mainAdapter = ExpensesAdapter()
+        mainAdapter = ExpenseListsAdapter(this)
 
         offline_lists_recycler_view.layoutManager = LinearLayoutManager(context)
         offline_lists_recycler_view.adapter = mainAdapter
@@ -50,11 +52,11 @@ class OfflineListsFragment : Fragment() {
 
     private fun updateAdapter()
     {
-        databaseRequester!!.GetAllExpenses(
+        /*databaseRequester!!.GetAllExpenses(
                 {
                     elements ->
                     run{
-                        var list = mutableListOf<Expense>()
+                        var list = mutableListOf<ExpenseList>()
                         val iterator = elements.iterator()
 
                         iterator.forEach{
@@ -63,11 +65,15 @@ class OfflineListsFragment : Fragment() {
 
                         mainAdapter!!.setElements(list)
                     }
-                })
+                })*/
     }
 
     override fun onResume() {
         super.onResume()
         updateAdapter()
+    }
+
+    override fun onItemClicked(list: ExpenseList) {
+
     }
 }

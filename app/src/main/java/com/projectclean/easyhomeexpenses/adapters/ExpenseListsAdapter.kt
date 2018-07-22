@@ -9,6 +9,7 @@ import com.projectclean.easyhomeexpenses.BR
 import com.projectclean.easyhomeexpenses.R
 import com.projectclean.easyhomeexpenses.database.FirebaseController
 import com.projectclean.easyhomeexpenses.databinding.ListViewBinding
+import com.projectclean.easyhomeexpenses.fragments.ExpensesListFragment
 import com.projectclean.easyhomeexpenses.fragments.OnlineListsFragment
 import com.projectclean.easyhomeexpenses.models.ExpenseList
 
@@ -16,11 +17,11 @@ import com.projectclean.easyhomeexpenses.models.ExpenseList
  * Created by Carlos Albaladejo Pérez on 24/02/2018.
  */
 
-class ExpenseListsAdapter(var ownerFragment: OnlineListsFragment) : RecyclerView.Adapter<ExpenseListsAdapter.ListViewHolder>()
+class ExpenseListsAdapter(var ownerFragment: ExpensesListFragment) : RecyclerView.Adapter<ExpenseListsAdapter.ListViewHolder>()
 {
     private var items : List<ExpenseList> = listOf()
 
-    class ListViewHolder(var binding: ListViewBinding, var ownerFragment: OnlineListsFragment) : RecyclerView.ViewHolder(binding.root)
+    class ListViewHolder(var binding: ListViewBinding, var ownerFragment: ExpensesListFragment) : RecyclerView.ViewHolder(binding.root)
     {
         fun bind(expenseList: ExpenseList)
         {

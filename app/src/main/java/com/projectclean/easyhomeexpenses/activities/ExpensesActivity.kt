@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Intent
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
+import android.view.MenuItem
 import com.projectclean.easyhomeexpenses.R
 import com.projectclean.easyhomeexpenses.adapters.ExpensesAdapter
 import com.projectclean.easyhomeexpenses.database.FirebaseController
@@ -28,6 +29,8 @@ class ExpensesActivity : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_expenses)
 
+        //registerForContextMenu(expenses_recycler_view)
+
         add_expense_btn.setOnClickListener(
                 {
                     addExpense()
@@ -47,13 +50,56 @@ class ExpensesActivity : Activity() {
         {
             //We feed the adapter with Room data.
         }
+    }
 
+    override fun onPause() {
+        super.onPause()
+        unregisterForContextMenu(expenses_recycler_view)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        registerForContextMenu(expenses_recycler_view)
         updateAdapter()
+    }
+
+    /*override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
+        super.onCreateContextMenu(menu, v, menuInfo)
+
+        if (v?.id == expenses_recycler_view.id)
+        {
+            menuInflater.inflate(R.menu.expenses_context_menu, menu)
+        }
+    }*/
+
+    override fun onContextItemSelected(item: MenuItem?): Boolean {
+
+        when (item?.itemId){
+            R.id.delete_expense -> {
+                if (mOnlineMode) {
+                    FirebaseController.instance?.deleteExpense(mListId, mMainAdapter.getLongSelectedItem().id,
+                            {
+                                Log.d(TAG, "Expense deleted correctly.")
+                                updateAdapter()
+                            },
+                            {
+                                Log.d(TAG, "Expense deletion FAILED.")
+                            }
+                    )
+                }
+                else
+                {
+
+                }
+            }
+        }
+
+        return super.onContextItemSelected(item)
     }
 
     private fun setAdapter()
     {
-        mMainAdapter = ExpensesAdapter()
+        mMainAdapter = ExpensesAdapter(this)
         expenses_recycler_view.layoutManager = LinearLayoutManager(this)
         expenses_recycler_view.adapter = mMainAdapter
     }
@@ -72,19 +118,37 @@ class ExpensesActivity : Activity() {
 
     private fun addExpense()
     {
-        var intent = Intent(this, OnlineNewExpenseActivity::class.java)
-        intent.putExtra(OnlineNewExpenseActivity.LIST_ID,mListId);
-        startActivity(intent)
+        if (mOnlineMode) {
+            var intent = Intent(this, OnlineNewExpenseActivity::class.java)
+            intent.putExtra(OnlineNewExpenseActivity.LIST_ID, mListId);
+            startActivity(intent)
+        }
+        else
+        {
+
+        }
     }
 
     fun onItemClicked(expense: Expense)
     {
         Log.e(TAG, "list:"+expense.id)
+        if (mOnlineMode)
+        {
+            var intent = Intent(this, OnlineEditExpenseActivity::class.java)
+            intent.putExtra(OnlineEditExpenseActivity.LIST_ID, mListId)
+            intent.putExtra(OnlineEditExpenseActivity.EXPENSE_ID, expense.id)
 
-        var intent = Intent(this, ExpensesActivity::class.java)
-        intent.putExtra(ExpensesActivity.ONLINE_MODE, true)
-        intent.putExtra(ExpensesActivity.LIST_ID, list.listId)
-        startActivity(intent)
+            intent.putExtra(EditExpenseActivity.NAME, expense.name)
+            intent.putExtra(EditExpenseActivity.OWNER_NAME, expense.ownerName)
+            intent.putExtra(EditExpenseActivity.DATE, expense.date.toString())
+            intent.putExtra(EditExpenseActivity.MONEY, expense.money.toString())
+
+            startActivity(intent)
+        }
+        else
+        {
+
+        }
     }
 
 }
