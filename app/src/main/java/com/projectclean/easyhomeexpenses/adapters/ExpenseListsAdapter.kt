@@ -3,7 +3,9 @@ package com.projectclean.easyhomeexpenses.adapters
 import android.databinding.DataBindingUtil
 import android.support.v7.widget.RecyclerView
 import android.util.Log
+import android.view.ContextMenu
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import com.projectclean.easyhomeexpenses.BR
 import com.projectclean.easyhomeexpenses.R
@@ -20,14 +22,23 @@ import com.projectclean.easyhomeexpenses.models.ExpenseList
 class ExpenseListsAdapter(var ownerFragment: ExpensesListFragment) : RecyclerView.Adapter<ExpenseListsAdapter.ListViewHolder>()
 {
     private var items : List<ExpenseList> = listOf()
+    private var mLongSelectedPosition : Int = 0
 
-    class ListViewHolder(var binding: ListViewBinding, var ownerFragment: ExpensesListFragment) : RecyclerView.ViewHolder(binding.root)
+    class ListViewHolder(var binding: ListViewBinding, var ownerFragment: ExpensesListFragment) : RecyclerView.ViewHolder(binding.root), View.OnCreateContextMenuListener
     {
+        init {
+            itemView.setOnCreateContextMenuListener(this)
+        }
+
         fun bind(expenseList: ExpenseList)
         {
             binding.setVariable(BR.list, expenseList)
             binding.setVariable(BR.fragment, ownerFragment)
             binding.executePendingBindings()
+        }
+
+        override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo?) {
+            ownerFragment.activity.menuInflater.inflate(R.menu.expense_list_context_menu, menu)
         }
     }
 
@@ -39,7 +50,14 @@ class ExpenseListsAdapter(var ownerFragment: ExpensesListFragment) : RecyclerVie
         return ListViewHolder(binding, ownerFragment)
     }
 
-    override fun onBindViewHolder(holder: ListViewHolder, position: Int) = holder.bind(items[position])
+    override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
+        holder.bind(items[position])
+        holder.itemView.isLongClickable = true
+        holder.itemView.setOnLongClickListener {
+            mLongSelectedPosition = position
+            false
+        }
+    }
 
     override fun getItemCount() = items.size
 
@@ -51,6 +69,11 @@ class ExpenseListsAdapter(var ownerFragment: ExpensesListFragment) : RecyclerVie
                 notifyDataSetChanged()
             }}
         )
+    }
+
+    fun getLongSelectedItem() : ExpenseList
+    {
+        return this.items[mLongSelectedPosition]
     }
 
 }

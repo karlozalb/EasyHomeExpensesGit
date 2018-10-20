@@ -63,15 +63,6 @@ class ExpensesActivity : Activity() {
         updateAdapter()
     }
 
-    /*override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
-        super.onCreateContextMenu(menu, v, menuInfo)
-
-        if (v?.id == expenses_recycler_view.id)
-        {
-            menuInflater.inflate(R.menu.expenses_context_menu, menu)
-        }
-    }*/
-
     override fun onContextItemSelected(item: MenuItem?): Boolean {
 
         when (item?.itemId){
@@ -139,7 +130,6 @@ class ExpensesActivity : Activity() {
             intent.putExtra(OnlineEditExpenseActivity.EXPENSE_ID, expense.id)
 
             intent.putExtra(EditExpenseActivity.NAME, expense.name)
-            intent.putExtra(EditExpenseActivity.OWNER_NAME, expense.ownerName)
             intent.putExtra(EditExpenseActivity.DATE, expense.date.toString())
             intent.putExtra(EditExpenseActivity.MONEY, expense.money.toString())
 

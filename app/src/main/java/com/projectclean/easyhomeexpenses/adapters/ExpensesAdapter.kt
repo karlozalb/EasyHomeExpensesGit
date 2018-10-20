@@ -38,8 +38,6 @@ class ExpensesAdapter(var ownerActivity : ExpensesActivity) : RecyclerView.Adapt
 
         override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo?) {
             ownerActivity.menuInflater.inflate(R.menu.expenses_context_menu, menu)
-
-            //Log.d("TEST","TEST")
         }
     }
 

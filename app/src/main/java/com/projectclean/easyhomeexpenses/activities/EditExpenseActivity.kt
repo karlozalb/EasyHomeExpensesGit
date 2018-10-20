@@ -17,7 +17,6 @@ import java.util.*
 abstract class EditExpenseActivity : AppCompatActivity() {
 
     companion object {
-        val OWNER_NAME : String = "OwnerName"
         val NAME : String = "Name"
         val MONEY = "Money"
         val DATE = "Date"
@@ -54,7 +53,6 @@ abstract class EditExpenseActivity : AppCompatActivity() {
             try {
                 exp.money       = newExpenseCost.text.toString()
                 exp.name        = newExpenseName.text.toString()
-                exp.ownerName   = newExpenseOwner.text.toString()
 
                 UpdateExpense(exp)
 
@@ -80,12 +78,10 @@ abstract class EditExpenseActivity : AppCompatActivity() {
             }
         }
 
-        Log.d(TAG,"OWNER_NAME:" + intent.getStringExtra(OWNER_NAME) )
         Log.d(TAG,"NAME:" + intent.getStringExtra(NAME) )
         Log.d(TAG,"MONEY:" + intent.getStringExtra(MONEY) )
         Log.d(TAG,"DATE:" + intent.getStringExtra(DATE) )
 
-        newExpenseOwner.setText(intent.getStringExtra(OWNER_NAME))
         newExpenseName.setText(intent.getStringExtra(NAME))
         newExpenseCost.setText(intent.getStringExtra(MONEY))
         newExpenseDate.setText(intent.getStringExtra(DATE))

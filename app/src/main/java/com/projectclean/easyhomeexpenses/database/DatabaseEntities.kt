@@ -16,10 +16,9 @@ class ExpenseEntity
     var id : Int = 0
 
     var name: String = ""
-    var ownerName: String = ""
     var date: Date = Date()
     var money: String = "0.0"
-
+    var ownerId : String? = ""
 }
 
 @Entity(tableName = "lists")

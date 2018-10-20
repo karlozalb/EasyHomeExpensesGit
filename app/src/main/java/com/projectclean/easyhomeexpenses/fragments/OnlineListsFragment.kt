@@ -3,11 +3,10 @@ package com.projectclean.easyhomeexpenses.fragments
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
-import android.support.v4.app.Fragment
-import android.support.v4.app.ListFragment
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -28,12 +27,12 @@ import com.projectclean.easyhomeexpenses.database.FirebaseController
 import com.projectclean.easyhomeexpenses.models.ExpenseList
 import kotlinx.android.synthetic.main.online_list_fragment.*
 
-class OnlineListsFragment : ExpensesListFragment(), GoogleApiClient.OnConnectionFailedListener, NewListFragment.NoticeDialogListener {
+class OnlineListsFragment : ExpensesListFragment(), GoogleApiClient.OnConnectionFailedListener, NewListFragment.NewListDialogListener {
 
     companion object {
 
 
-        private val TAG = "SignInActivity"
+        private val TAG = "OnlineListsFragment"
         private val RC_SIGN_IN = 9001
         private val ANONYMOUS : String = "Anonymous"
     }
@@ -62,7 +61,7 @@ class OnlineListsFragment : ExpensesListFragment(), GoogleApiClient.OnConnection
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
-        return inflater!!.inflate(R.layout.online_list_fragment, container, false)
+        return inflater?.inflate(R.layout.online_list_fragment, container, false)
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
@@ -107,12 +106,16 @@ class OnlineListsFragment : ExpensesListFragment(), GoogleApiClient.OnConnection
         super.onPause()
         mGoogleApiClient!!.stopAutoManage(activity)
         mGoogleApiClient!!.disconnect()
+
+        unregisterForContextMenu(lists_recycler_view)
     }
 
     override fun onResume() {
         super.onResume()
 
         mGoogleApiClient!!.connect()
+
+        registerForContextMenu(lists_recycler_view)
     }
 
     override fun onConnectionFailed(connectionResult: ConnectionResult) {
@@ -148,7 +151,7 @@ class OnlineListsFragment : ExpensesListFragment(), GoogleApiClient.OnConnection
     {
         setUISignedIn(true)
 
-        mFireBaseUser = mFirebaseAuth!!.currentUser
+        mFireBaseUser = mFirebaseAuth?.currentUser
         mFirebaseFirestore = FirebaseFirestore.getInstance()
 
         FirebaseController.init(mFirebaseFirestore!!,mFireBaseUser!!)
@@ -204,8 +207,8 @@ class OnlineListsFragment : ExpensesListFragment(), GoogleApiClient.OnConnection
         newFragment.show(childFragmentManager, "NewListFragment")
     }
 
-    override fun onDialogPositiveClick(dialog: DialogFragment, listName: String) {
-        FirebaseController.instance!!.createNewList(listName,
+    override fun onDialogPositiveClick(dialog: DialogFragment, listName: String, periodStart: Int) {
+        FirebaseController.instance!!.createNewList(listName,periodStart,
                 {
                     listId ->
                     run{ mListId = listId;Log.i(TAG, "ExpenseList created successfully with id: " + mListId) }
@@ -226,5 +229,15 @@ class OnlineListsFragment : ExpensesListFragment(), GoogleApiClient.OnConnection
         intent.putExtra(ExpensesActivity.ONLINE_MODE, true)
         intent.putExtra(ExpensesActivity.LIST_ID, list.listId)
         startActivity(intent)
+    }
+
+    override fun onContextItemSelected(item: MenuItem?): Boolean {
+
+        when (item?.itemId){
+            R.id.edit_list -> { Log.d(TAG, "Edit list.")}
+            R.id.delete_list -> { Log.d(TAG, "Delete list.")}
+        }
+
+        return super.onContextItemSelected(item)
     }
 }

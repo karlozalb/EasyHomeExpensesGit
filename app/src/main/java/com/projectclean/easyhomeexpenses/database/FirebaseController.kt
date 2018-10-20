@@ -31,6 +31,11 @@ class FirebaseController(var db : FirebaseFirestore, var user : FirebaseUser)
     val EXPENSES_COLLECTION : String = "ExpensesCollection"
     val LISTS_COLLECTION : String = "ListsCollection"
 
+    fun getUserId() : String
+    {
+        return user.uid
+    }
+
     fun createExpense(listId : String, expense : ExpenseEntity, onSuccess : () -> Unit, onError : () -> Unit)
     {
         var newExpense = hashMapOf<String,Any>()
@@ -39,7 +44,6 @@ class FirebaseController(var db : FirebaseFirestore, var user : FirebaseUser)
         newExpense["name"] = expense.name
         newExpense["date"] = expense.date
         newExpense["money"] = expense.money
-        newExpense["ownerName"] = expense.ownerName
 
         db.collection(LISTS_COLLECTION)
                 .document(listId)
@@ -57,7 +61,6 @@ class FirebaseController(var db : FirebaseFirestore, var user : FirebaseUser)
         updatedExpense["name"] = expense.name
         updatedExpense["date"] = expense.date
         updatedExpense["money"] = expense.money
-        updatedExpense["ownerName"] = expense.ownerName
 
         db.collection(LISTS_COLLECTION)
                 .document(listId)
@@ -89,7 +92,7 @@ class FirebaseController(var db : FirebaseFirestore, var user : FirebaseUser)
                 var expenses = mutableListOf<Expense>()
 
                 list.forEach { document -> run {
-                    expenses.add(Expense(document.data["name"].toString(), Date(document.data["date"].toString()),parseFloat(document.data["money"].toString()),document.data["ownerName"].toString(),document.id))
+                    expenses.add(Expense(document.data["name"].toString(), Date(document.data["date"].toString()),parseFloat(document.data["money"].toString()),document.data["ownerId"].toString(),document.id))
                 } }
 
                 onSuccess(expenses)
@@ -97,7 +100,7 @@ class FirebaseController(var db : FirebaseFirestore, var user : FirebaseUser)
         } }
     }
 
-    fun createNewList(name : String, onSuccess : (String) -> Unit, onError : () -> Unit)
+    fun createNewList(name : String, periodStart : Int, onSuccess : (String) -> Unit, onError : () -> Unit)
     {
         var newList = hashMapOf<String,Any>()
 
@@ -106,6 +109,7 @@ class FirebaseController(var db : FirebaseFirestore, var user : FirebaseUser)
         newList["creator_id"] = user.uid
         newList["shared_with"] = sharedWith
         newList["name"] = name
+        newList["periodStart"] = periodStart
 
         db.collection(LISTS_COLLECTION)
                 .add(newList)

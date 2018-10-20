@@ -12,6 +12,7 @@ import android.view.View.OnFocusChangeListener
 import com.projectclean.easyhomeexpenses.database.ExpenseDatabaseRequester
 import com.projectclean.easyhomeexpenses.database.ExpenseEntity
 import com.projectclean.easyhomeexpenses.database.ExpensesDataBase
+import com.projectclean.easyhomeexpenses.database.FirebaseController
 import kotlinx.android.synthetic.main.new_expense_view.*
 import com.projectclean.easyhomeexpenses.extensions.fromDateToEditable
 import com.projectclean.easyhomeexpenses.extensions.fromMillisToEditable
@@ -62,7 +63,7 @@ abstract class NewExpenseActivity : AppCompatActivity() {
             try {
                 exp.money       = newExpenseCost.text.toString()
                 exp.name        = newExpenseName.text.toString()
-                exp.ownerName   = newExpenseOwner.text.toString()
+                exp.ownerId     = FirebaseController.instance?.getUserId()
 
                 SaveExpense(exp)
 

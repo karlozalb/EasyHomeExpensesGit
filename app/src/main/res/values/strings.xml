@@ -21,5 +21,9 @@
     <string name="title_activity_expenses">ExpensesActivity</string>
 
     <string name="menu_delete">Delete</string>
+    <string name="menu_edit">Edit</string>
+
+    <string name="period_start_end">Period start/end</string>
+    <string name="you">You</string>
 
 </resources>

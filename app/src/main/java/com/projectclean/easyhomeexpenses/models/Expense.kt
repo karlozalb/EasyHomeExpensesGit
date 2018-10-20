@@ -4,54 +4,75 @@ import android.databinding.BaseObservable
 import android.databinding.Bindable
 import com.projectclean.easyhomeexpenses.BR
 import com.projectclean.easyhomeexpenses.database.ExpenseEntity
+import com.projectclean.easyhomeexpenses.database.FirebaseController
 import java.util.*
 
 /**
  * Created by Carlos Albaladejo Pérez on 24/02/2018.
  */
 
-data class Expense(var pname: String, var pdate: Date, var pmoney: Float, var pownername: String, var id : String) : BaseObservable()
+class Expense() : BaseObservable()
 {
 
-    constructor(expense: ExpenseEntity) : this(expense.name,expense.date,expense.money.toFloat(),expense.ownerName, "")
+    constructor (pname: String, pdate: Date, pmoney: Float, pownerid: String?, pid : String) : this() {
+        this.name = pname
+        this.date = pdate
+        this.money = pmoney
+        this.ownerId = pownerid
+        this.id = pid
+    }
 
-    var name : String = pname
+    constructor(expense: ExpenseEntity) : this(expense.name,expense.date,expense.money.toFloat(),expense.ownerId, "")
+
+    var id : String = "";
+
+    var name : String = ""
     @Bindable
     get() = field
 
     set(value)
     {
-        name = value
+        field = value
         notifyPropertyChanged(BR.name)
     }
 
-    var date : Date = pdate
+    var date : Date = Date()
     @Bindable
     get() = field
 
     set(value)
     {
-        date = value
+        field = value
         notifyPropertyChanged(BR.date)
     }
 
-    var money : Float = pmoney
+    var money : Float = 0f
     @Bindable
     get() = field
 
     set(value)
     {
-        money = value
+        field = value
         notifyPropertyChanged(BR.money)
     }
 
-    var ownerName : String = pownername
+    var ownerId : String? = ""
     @Bindable
     get() = field
 
     set(value)
     {
-        ownerName = value
-        notifyPropertyChanged(BR.name)
+        field = value
+        notifyPropertyChanged(BR.ownerId)
     }
+
+    var ownerHumanReadableName : String? = ""
+        @Bindable
+        get() = field
+
+        set(value)
+        {
+            field = value
+            notifyPropertyChanged(BR.ownerHumanReadableName)
+        }
 }
